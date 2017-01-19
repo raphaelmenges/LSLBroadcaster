@@ -159,24 +159,33 @@ for i in range(10, 0, -1):
 # Do it while there are events
 print("--- START STREAMING ---")
 eventCount = len(events)
-for i in range(eventCount):
-
-    # Extract data from current event
+eventStartTime = events[0][0]
+startTime = time.time()
+i = 0
+while i < eventCount:
+    
+    # Store current time
+    currentTime = time.time()
+    
+    # Check whether time until next event is over
     event = events[i]
     timestamp = event[0]
-    outletIndex = event[1]
-    timeSeriesIndex = event[2]
+    if (currentTime - startTime) > (timestamp - eventStartTime):
+        
+        # Extract further data from current event
+        outletIndex = event[1]
+        timeSeriesIndex = event[2]
     
-    # Get sample data to push
-    sampleData = streams[outletIndex]['time_series'][timeSeriesIndex]
+        # Get sample data to push
+        sampleData = streams[outletIndex]['time_series'][timeSeriesIndex]
+        
+        # Push sample data to outlet
+        outlets[outletIndex].push_sample(sampleData) # TODO: stamp from hardware
     
-    # Push sample data to outlet
-    outlets[outletIndex].push_sample(sampleData) # TODO: stamp from hardware
-    
-    # Print timestamp
-    print("Sample at: " + str(timestamp))
-    
-    # Set delta time (TODO: potentially erronous. maybe use some global time measurement)
-    if i < eventCount-1:
-        time.sleep(events[i+1][0]-timestamp)
+        # Print timestamp
+        print("Sample at: " + str(timestamp))
+            
+        # Increment i
+        i = i+1
+        
 print("-----------------------")
