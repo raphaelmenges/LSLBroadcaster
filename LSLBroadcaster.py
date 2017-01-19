@@ -149,7 +149,7 @@ events.sort(comparator)
 
 # Initial waiting time
 print("--- ABOUT TO START STREAMING ---")
-for i in range(10, 0, -1):
+for i in range(15, 0, -1):
     
     # Wait one second
     print(str(i))
