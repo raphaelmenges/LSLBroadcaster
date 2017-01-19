@@ -1,8 +1,9 @@
-import time
-from random import random as rand
-
+# Import modules
 from pylsl.pylsl import StreamInfo, StreamOutlet, local_clock
+import xdf.xdf as xdf
+import time
 
+'''
 # first create a new stream info (here we set the name to BioSemi,
 # the content-type to EEG, 8 channels, 100 Hz, and float-valued data) The
 # last value would be the serial number of the device or some other more or
@@ -34,3 +35,13 @@ while True:
     # now send it and wait for a bit
     outlet.push_sample(mysample, stamp)
     time.sleep(0.01)
+'''
+
+# Load file
+streams = xdf.load_xdf(r"SampleData.xdf", None, False)
+
+# Created info headers
+
+# Merge all timestamps in a tuple structure pointing from timestamp to data to send
+
+# Do a while loop and sleep until next timestamp is reached and data has to be sent
