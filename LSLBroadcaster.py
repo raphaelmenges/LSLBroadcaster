@@ -149,8 +149,12 @@ events.sort(comparator)
 
 # Initial waiting time
 print("--- ABOUT TO START STREAMING ---")
-sys.stdout.flush()
-time.sleep(10)
+for i in range(10, 0, -1):
+    
+    # Wait one second
+    print(str(i))
+    sys.stdout.flush()
+    time.sleep(1)
 
 # Do it while there are events
 print("--- START STREAMING ---")
