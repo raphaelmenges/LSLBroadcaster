@@ -113,26 +113,30 @@ for i in range(len(streams)):
         # Is value a sequence ("append_child_value")
         if(isinstance(childValue, collections.Sequence)):
             print("   " + childKey + ": " + childValue)
-            info.desc().append_child_value(childKey, childValue)
+            info.desc().append_child_value(childKey, childValue) # for example "manufacturer: companyName"
             
         # Is value a mapping ("append_child")
         elif(isinstance(childValue, collections.Mapping)):
             print("   " + childKey)
-            child = info.desc().append_child(childKey)
+            infoChild = info.desc().append_child(childKey) # for example "channels"
             
-            # Go over entries within child
-            for innerChildKey in childValue:
-                print("   " + "   " + innerChildKey)
-                child.append_child(innerChildKey)
+            # Value of child is a dictionary that has to be traversed
+            for childValueKey in childValue: # go over all collected unique children
                 
-                # Now go over even more inner child
-                for innererChild in childValue[innerChildKey]:
+                # The XDF structure seams to collect all inner children with the same name
+                # and then creates a dictionary to distinguish between the children. Here
+                # we are inside one of those unified structures                
+                for innerChildValues in childValue[childValueKey]: # go over data sets of unified children
                     
-                    # Now go over innermost child
-                    for innermostChild in innererChild:
-                        print("   " + "   " + "   " + innermostChild + ": " + innererChild[innermostChild][0])
-                        child.append_child_value(innermostChild, innererChild[innermostChild][0])
-                        
+                    # Add new inner child to the info header
+                    print("   " + "   " + childValueKey)
+                    innerInfoChild = infoChild.append_child(childValueKey) # for example "channel"
+                    
+                    # Now go over information of single asset within unified structure (like information about one channel)
+                    for innerChildKey in innerChildValues: # go over extracted data set
+                        print("   " + "   " + "   " + innerChildKey + ": " + innerChildValues[innerChildKey][0])
+                        innerInfoChild = innerInfoChild.append_child_value(innerChildKey, innerChildValues[innerChildKey][0]) # for example "type: EEG"
+                    
     # Add outlet with information
     outlets.append(StreamOutlet(info, 32, 360)) # chunk size and buffer for given seconds
     
