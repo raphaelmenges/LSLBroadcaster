@@ -24,6 +24,7 @@
 from pylsl.pylsl import StreamInfo, StreamOutlet, local_clock
 import xdf.xdf as xdf
 import collections
+import optparse
 import time
 import sys
 
@@ -62,8 +63,20 @@ while True:
     time.sleep(0.01)
 '''
 
+###############################################################################
+### LOAD STREAM
+###############################################################################
+
+# Parse argument line to get filepath
+parser = optparse.OptionParser()
+parser.add_option('-f', '--filepath',
+    action="store", dest="filepath",
+    help="Path to XDF file", default="SampleData.xdf")
+options, args = parser.parse_args()
+print 'Filepath: ', options.filepath
+
 # Load file
-streams = xdf.load_xdf(r"SampleData.xdf", None, False)[0]
+streams = xdf.load_xdf(options.filepath, None, False)[0]
 
 ###############################################################################
 ### CREATE STREAMS WITH INFO HEADERS
