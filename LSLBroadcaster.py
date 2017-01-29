@@ -27,6 +27,9 @@ import collections
 import optparse
 import time
 import sys
+if sys.version_info >= (3,0):
+    import functools
+
 
 # Python sender example
 '''
@@ -73,7 +76,7 @@ parser.add_option('-f', '--filepath',
     action="store", dest="filepath",
     help="Path to XDF file", default="SampleData.xdf")
 options, args = parser.parse_args()
-print 'Filepath: ', options.filepath
+print ('Filepath: ', options.filepath)
 
 # Load file
 streams = xdf.load_xdf(options.filepath, None, False)[0]
@@ -180,7 +183,12 @@ def comparator(x, y):
         return 1 # x greater than y
     else:
         return 0 # x equal to y
-events.sort(comparator)
+
+if sys.version_info >= (3,0):
+    events.sort(key=functools.cmp_to_key(comparator))
+else:
+    events.sort(comparator)
+
 
 ###############################################################################
 ### SEND DATA
